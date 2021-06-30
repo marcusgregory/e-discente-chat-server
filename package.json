@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "main": "server.js",
   "author": "Marcus Gregory <dev.marcusgregory@gmail.com>",
+  "engines": {
+    "node": "12.x"
+  },
   "scripts": {
     "build": "tsc --project ./",
     "start:dev-debug": "DEBUG=* nodemon src/server.ts",
