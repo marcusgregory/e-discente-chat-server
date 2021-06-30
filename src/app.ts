@@ -95,14 +95,14 @@ class App {
                         }
 
       } catch (err) {
-        console.log('socket desconectado: ' + socket.id);
+        console.log('socket desconectado (Falha no token): ' + socket.id);
         socket.disconnect();
       }
 
       if (usuarioToken != null && usuarioToken != '') {
         socket.join(usuarioToken);
       } else {
-        console.log('socket desconectado: ' + socket.id);
+        console.log('socket desconectado (Não passou o token): ' + socket.id);
         socket.disconnect();
       }
 
