@@ -95,12 +95,14 @@ class App {
                         }
 
       } catch (err) {
+        console.log('socket desconectado: ' + socket.id);
         socket.disconnect();
       }
 
       if (usuarioToken != null && usuarioToken != '') {
         socket.join(usuarioToken);
       } else {
+        console.log('socket desconectado: ' + socket.id);
         socket.disconnect();
       }
 
