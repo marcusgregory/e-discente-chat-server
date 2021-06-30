@@ -1,0 +1,179 @@
+import express from "express";
+import http from "http";
+import cors from "cors";
+import routes from "./routes";
+import socketIO from "socket.io";
+import database from "./database/database";
+import { instrument } from "@socket.io/admin-ui";
+//import { UserModel } from "./models/users.model";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import path from "path";
+import { MessageModel } from "./models/message.model";
+import authMiddleware from "./middlewares/auth.middleware";
+import { UserModel } from "./models/users.model";
+//import axios from 'axios';
+//import { GroupModel } from "./models/groups.model";
+
+class App {
+
+  public server;
+  private io: socketIO.Server;
+  public httpServer: http.Server;
+  private corsOpts = {
+    origin: "*",
+    allowedHeaders: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  }
+
+  constructor() {
+    this.server = express();
+    this.middlewares();
+    this.httpServer = this.buildHttpServer(this.server);
+    this.io = this.buildSocketIO()
+    this.routes();
+    this.socketInit();
+  }
+  buildHttpServer(server: express.Application): http.Server {
+    process.env.TZ = 'America/Sao_Paulo' 
+    dotenv.config();
+    database.connect();
+    return new http.Server(server);
+  }
+
+  buildSocketIO(): socketIO.Server {
+    return new socketIO.Server(this.httpServer, {
+      cors: this.corsOpts
+    });
+
+  }
+  middlewares() {
+    this.server.use(cors(this.corsOpts));
+    this.server.use(express.json());
+    //this.server.use(authMiddleware);
+  }
+
+  routes() {
+    this.server.use(routes);
+    this.server.use('/admin', express.static(path.join(__dirname, '/../public')));
+    this.server.use('/css', express.static(path.join(__dirname, '/../public/css')));
+    this.server.use('/js', express.static(path.join(__dirname, '/../public/js')));
+    this.server.use('/img', express.static(path.join(__dirname, '/../public/img')));
+  }
+
+  socketInit() {
+    instrument(this.io, {
+      auth: false
+    });
+    this.io.on('connection', async (socket: socketIO.Socket) => {
+      console.log('Tentativa de conexão...');
+      //pega o token do usuario passado pelo app
+      var token = String(socket.handshake.query.token);
+      var usuario:any = JSON.parse(String(socket.handshake.query.usuario));
+      console.log('socket conectado: ' + socket.id);
+      console.log('usuario: ' + usuario.nomeDeUsuario);
+
+      var usuarioToken = '';
+      try {
+        //verifica se o token é valido
+        var decoded: any = jwt.verify(token, String(process.env.SECRETKEY));
+        //pega o nome do usuario de dentro do token
+        usuarioToken = decoded.usuario;
+
+        var query = {uid:usuario.nomeDeUsuario},
+                            update = {
+                                uid:usuario.nomeDeUsuario,
+                                isOnline: true,
+                                photoUrl:usuario.urlImagemPerfil
+                                 },
+                            options = { upsert: true, new: true, setDefaultsOnInsert: true };
+                        try {
+                            var user: any = await UserModel.findOneAndUpdate(query, update, options);
+                            console.log(user);
+                        } catch (err) {
+                          socket.disconnect();
+                        }
+
+      } catch (err) {
+        socket.disconnect();
+      }
+
+      if (usuarioToken != null && usuarioToken != '') {
+        socket.join(usuarioToken);
+      } else {
+        socket.disconnect();
+      }
+
+
+      /*  socket.on('listar_grupos',async () => {
+          console.log('listando grupos');
+          var user:any = await UserModel.findOne({uid:usuario});
+          console.log(user.groups);
+           socket.emit('grupos',user
+           );
+        });
+            this.io.to('1').emit('receber_mensagem', {
+          '_id': null,
+          'gid': '1',
+          'messageText': 'testeee',
+          'sendBy': 'zezinho',
+          'sendAt': new Date(),
+          'profilePicUrl': 'https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500'
+        });
+       
+        */
+
+      socket.on('entrar_nos_grupos', (grupos) => {
+        console.log('grupos enviados por ' + usuario.nomeDeUsuario + ' : ' + grupos);
+        if (grupos) {
+          var listaGrupos: Array<string> = JSON.parse(grupos);
+          for (var grupo of listaGrupos) {
+            socket.join(grupo);
+            console.log(usuario.nomeDeUsuario + ' entrou no grupo: ' + grupo);
+          }
+
+        }
+      });
+
+      socket.on('evento_digitando', (digitando) => {
+        console.log(digitando.sendBy + ' está digitando...');
+        socket.to(digitando.gid).volatile.emit('evento_digitando', digitando);
+      });
+
+      socket.on('enviar_mensagem', async (message, callback) => {
+        try {
+          var msg: any = await MessageModel.create(message);
+          console.log(msg);
+          callback({
+            status: 'ok',
+            message: 'Mensagem recebida no servidor'
+          });
+          console.log(usuario.nomeDeUsuario + ' enviou a mensagem: ' + message.messageText);
+          socket.to(message.gid).emit('receber_mensagem', message);
+      } catch (err) {
+        console.log(err);
+        callback({
+          status: 'error',
+          messageError:err.toString,
+          message: 'Não foi possível salvar a mensagem no banco de dados'
+        });
+      }
+       
+      });
+
+
+
+
+
+      socket.on('disconnect', () => {
+        console.log('socket desconectado: ' + socket.id);
+        console.log('usuario desconectado: ' + usuarioToken);
+      });
+
+
+    });
+
+  }
+}
+
+export default new App();
