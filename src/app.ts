@@ -10,7 +10,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import path from "path";
 import { MessageModel } from "./models/message.model";
-import authMiddleware from "./middlewares/auth.middleware";
+//import authMiddleware from "./middlewares/auth.middleware";
 import { UserModel } from "./models/users.model";
 //import axios from 'axios';
 //import { GroupModel } from "./models/groups.model";

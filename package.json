@@ -8,12 +8,12 @@
   },
   "scripts": {
     "build": "tsc --project ./",
-    "postinstall": "tsc --project ./",
+    "postinstall": "npm run build",
     "start:dev-debug": "DEBUG=* nodemon src/server.ts",
     "start:dev-fast": "ts-node-dev --respawn --transpile-only src/server.ts",
     "start:dev": "nodemon src/server.ts",
     "start:prod": "node dist/server.js",
-    "start": "node dist/server.js",
+    "start": "npm run build && node dist/server.js",
     "deploy": "git add . && git commit -m Heroku && git push heroku master",
     "test": "node dist/test.js"
   },

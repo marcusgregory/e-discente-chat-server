@@ -2,7 +2,7 @@ import * as express from 'express'
 import { BaseController } from './base.controller'
 import jwt from "jsonwebtoken";
 import axios from 'axios';
-import { GroupModel } from '/home/gregory/NodeJsProjects/chat-server/src/models/groups.model';
+import { GroupModel } from '../models/groups.model';
 
 class ChatsController extends BaseController {
     constructor() {
