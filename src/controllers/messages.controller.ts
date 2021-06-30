@@ -2,7 +2,6 @@ import * as express from 'express'
 import { BaseController } from './base.controller'
 import jwt from "jsonwebtoken";
 import axios from 'axios';
-import { GroupModel } from '/home/gregory/NodeJsProjects/chat-server/src/models/groups.model';
 import { MessageModel } from '../models/message.model';
 import MessageSchema from '../models/message.schema';
 import moment from 'moment';
@@ -22,7 +21,7 @@ class MessagesController extends BaseController {
             var gid: string = String(req.params.gid);
             if(gid){
                 var docs = await MessageModel.find({gid:gid}).sort({_id:1});
-                docs.map((doc) => {
+                docs.map((doc:any) => {
                     var data:Date = doc.get('sendAt');
                     data.setHours(data.getHours() -3);
                     doc.set('sendAt',data);
