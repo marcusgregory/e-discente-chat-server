@@ -2,13 +2,12 @@ import mongoose from "mongoose";
 
 class Database {
 
-  private database!: mongoose.Connection;
+  public database!: mongoose.Connection;
 
   constructor() {
 
   }
   connect() {
-
     const uri = "mongodb+srv://admin:bancoteste@cluster0.c4ckv.mongodb.net/chat?retryWrites=true&w=majority";
     if (this.database) {
       return;

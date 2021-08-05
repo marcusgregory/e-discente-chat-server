@@ -12,6 +12,7 @@ import path from "path";
 import { MessageModel } from "./models/message.model";
 //import authMiddleware from "./middlewares/auth.middleware";
 import { UserModel } from "./models/users.model";
+const { createAdapter } = require("@socket.io/mongo-adapter");
 //import axios from 'axios';
 //import { GroupModel } from "./models/groups.model";
 
@@ -61,7 +62,23 @@ class App {
     this.server.use('/img', express.static(path.join(__dirname, '/../public/img')));
   }
 
-  socketInit() {
+  async socketInit() {
+   database.database.once("open", async () => {
+    try {
+      await database.database.db.createCollection('socket.io-adapter-events',{
+        capped: true,
+        size: 1e6
+      });
+    } catch (e) {
+      // collection already exists
+    }finally{
+      const collection = database.database.db.collection('socket.io-adapter-events');
+      this.io.adapter(createAdapter(collection));
+    }
+   });
+
+   
+    
     instrument(this.io, {
       auth: false
     });
@@ -69,6 +86,7 @@ class App {
       console.log('Tentativa de conexão...');
       //pega o token do usuario passado pelo app
       var token = String(socket.handshake.query.token);
+      //console.log("query :"+ socket.handshake.query);
       var usuario:any = JSON.parse(String(socket.handshake.query.usuario));
       console.log('socket conectado: ' + socket.id);
       console.log('usuario: ' + usuario.nomeDeUsuario);
