@@ -63,22 +63,20 @@ class App {
   }
 
   async socketInit() {
-   database.database.once("open", async () => {
-    try {
-      await database.database.db.createCollection('socket.io-adapter-events',{
-        capped: true,
-        size: 1e6
-      });
-    } catch (e) {
-      // collection already exists
-    }finally{
-      const collection = database.database.db.collection('socket.io-adapter-events');
-      this.io.adapter(createAdapter(collection));
-    }
-   });
+  //  database.database.once("open", async () => {
+  //   try {
+  //     await database.database.db.createCollection('socket.io-adapter-events',{
+  //       capped: true,
+  //       size: 1e6
+  //     });
+  //   } catch (e) {
+  //     // collection already exists
+  //   }finally{
+  //     const collection = database.database.db.collection('socket.io-adapter-events');
+  //     this.io.adapter(createAdapter(collection));
+  //   }
+  //  });
 
-   
-    
     instrument(this.io, {
       auth: false
     });
