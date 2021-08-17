@@ -46,7 +46,7 @@ class ChatsController extends BaseController {
                                 name: nomeGrupo,
                                 $addToSet: { members: decodedToken.usuario.trim() }
                             },
-                            options = { upsert: true, new: true, setDefaultsOnInsert: true };
+                            options = { upsert: true, new: true, setDefaultsOnInsert: true }; 
                         try {
                             var salaDoc: any = await GroupModel.findOneAndUpdate(query, update, options);
                             grupos.push(salaDoc);
@@ -58,7 +58,7 @@ class ChatsController extends BaseController {
                     return this.ok(res, grupos);
 
                 } else {
-                    return this.fail(res, 'status=' + response.status + '\nOcorreu um erro ao obter as turmas ')
+                    return this.fail(res, 'status=' + response.status + '\nOcorreu um erro ao obter as turmas no servidor')
                 }
 
             } catch (err) {
