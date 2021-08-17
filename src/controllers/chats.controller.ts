@@ -51,7 +51,7 @@ class ChatsController extends BaseController {
                             var salaDoc: any = await GroupModel.findOneAndUpdate(query, update, options);
                             grupos.push(salaDoc);
                         } catch (err) {
-                            return this.fail(res, err);
+                            return this.fail(res, err); 
                         }
 
                     }
