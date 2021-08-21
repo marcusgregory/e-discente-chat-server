@@ -160,7 +160,8 @@ class App {
 
       socket.on('enviar_mensagem', async (message, callback) => {
         try {
-          message['sendAt'] = new Date();
+          var dateNew = new Date();
+          message['sendAt'] = dateNew.setHours(dateNew.getHours() - 3);
           var msg: any = await MessageModel.create(message);
           console.log(msg);
           var date = new Date();
