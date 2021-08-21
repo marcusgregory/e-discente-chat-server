@@ -162,9 +162,11 @@ class App {
         try {
           var msg: any = await MessageModel.create(message);
           console.log(msg);
+          var date = new Date();
           callback({
             status: 'ok',
-            message: 'Mensagem recebida no servidor'
+            message: 'Mensagem recebida no servidor',
+            server_time:date.setHours(date.getHours()-3),
           });
           console.log(usuario.nomeDeUsuario + ' enviou a mensagem: ' + message.messageText);
           socket.to(message.gid).emit('receber_mensagem', message);
