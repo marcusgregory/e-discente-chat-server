@@ -171,6 +171,7 @@ class App {
             server_time:dateNew,
           });
           console.log(usuario.nomeDeUsuario + ' enviou a mensagem: ' + message.messageText);
+          message['sendAt'] = dateNew;
           socket.to(message.gid).emit('receber_mensagem', message);
       } catch (err) {
         console.log(err);
