@@ -21,12 +21,12 @@ class MessagesController extends BaseController {
             var gid: string = String(req.params.gid);
             if(gid){
                 var docs = await MessageModel.find({gid:gid}).sort({_id:1});
-                docs.map((doc:any) => {
-                    var data:Date = doc.get('sendAt');
-                    data.setHours(data.getHours() -3);
-                    doc.set('sendAt',data);
-                    return doc;
-                });
+                // docs.map((doc:any) => {
+                //     var data:Date = doc.get('sendAt');
+                //     data.setHours(data.getHours() -3);
+                //     doc.set('sendAt',data);
+                //     return doc;
+                // });
                 return this.ok(res,docs);
             }else{
                 this.fail(res,'Grupo inválido')

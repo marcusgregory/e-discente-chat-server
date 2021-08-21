@@ -161,7 +161,7 @@ class App {
       socket.on('enviar_mensagem', async (message, callback) => {
         try {
           var dateNew = new Date();
-          dateNew.setHours(dateNew.getHours() - 3)
+         // dateNew.setHours(dateNew.getHours() - 3)
           message['sendAt'] = new Date();
           var msg: any = await MessageModel.create(message);
           console.log(msg);
@@ -171,7 +171,7 @@ class App {
             server_time:dateNew,
           });
           console.log(usuario.nomeDeUsuario + ' enviou a mensagem: ' + message.messageText);
-          message['sendAt'] = dateNew;
+          //message['sendAt'] = dateNew;
           socket.to(message.gid).emit('receber_mensagem', message);
       } catch (err) {
         console.log(err);
