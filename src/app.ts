@@ -160,6 +160,7 @@ class App {
 
       socket.on('enviar_mensagem', async (message, callback) => {
         try {
+          message['sendAt'] = new Date();
           var msg: any = await MessageModel.create(message);
           console.log(msg);
           var date = new Date();
