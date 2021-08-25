@@ -13,6 +13,7 @@ import { MessageModel } from "./models/message.model";
 //import authMiddleware from "./middlewares/auth.middleware";
 import { UserModel } from "./models/users.model";
 const { createAdapter } = require("@socket.io/mongo-adapter");
+const bodyParser = require("body-parser");
 //import axios from 'axios';
 //import { GroupModel } from "./models/groups.model";
 
@@ -51,6 +52,10 @@ class App {
   middlewares() {
     this.server.use(cors(this.corsOpts));
     this.server.use(express.json());
+    this.server.use(bodyParser.urlencoded({
+      extended: true
+  }));
+    this.server.use(bodyParser.json());
     //this.server.use(authMiddleware);
   }
 
