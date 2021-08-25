@@ -3,6 +3,7 @@ import { BaseController } from './base.controller'
 import jwt from "jsonwebtoken";
 import { GroupModel } from '../models/groups.model';
 import { UpdateQuery } from 'mongoose';
+import { UserModel } from '../models/users.model';
 
 class RegisterTokenController extends BaseController {
     constructor() {
@@ -21,13 +22,12 @@ class RegisterTokenController extends BaseController {
             var query = {
                 uid:decodedToken.usuario};
                  var update = {
-                            uid:decodedToken.usuarioToken,
                             $addToSet: { fcmTokens: fcmToken },
                         };
                         var options = { upsert: true, new: true, setDefaultsOnInsert: true }; 
             if(fcmToken != null && decodedToken != null && fcmToken.trim() != '' && fcmToken != 'undefined'){
                 
-                var docs = await GroupModel.findOneAndUpdate(query,update as UpdateQuery<object>,options);
+                var docs = await UserModel.findOneAndUpdate(query,update as UpdateQuery<object>,options);
                 console.log('O usuário '+decodedToken.usuario.trim()+' registrou o fcmToken: '+ fcmToken.trim());
                 return this.ok(res,docs);
             }else{
