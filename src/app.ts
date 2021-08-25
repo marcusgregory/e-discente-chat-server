@@ -16,7 +16,7 @@ import { GroupModel } from "./models/groups.model";
 const { createAdapter } = require("@socket.io/mongo-adapter");
 const bodyParser = require("body-parser");
 const admin = require("firebase-admin");
-var serviceAccount = require("./firebase/e-discente-2dbb4-firebase-adminsdk-w9dd3-2a4908a372.json");
+var serviceAccount = require("../firebase/e-discente-2dbb4-firebase-adminsdk-w9dd3-2a4908a372.json");
 //import axios from 'axios';
 //import { GroupModel } from "./models/groups.model";
 

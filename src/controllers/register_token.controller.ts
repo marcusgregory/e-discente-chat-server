@@ -1,11 +1,8 @@
 import * as express from 'express'
 import { BaseController } from './base.controller'
 import jwt from "jsonwebtoken";
-import axios from 'axios';
-import { MessageModel } from '../models/message.model';
-import MessageSchema from '../models/message.schema';
-import moment from 'moment';
-import { UserModel } from '../models/users.model';
+import { GroupModel } from '../models/groups.model';
+import { UpdateQuery } from 'mongoose';
 
 class RegisterTokenController extends BaseController {
     constructor() {
@@ -15,19 +12,22 @@ class RegisterTokenController extends BaseController {
 
     protected async executeImpl(req: express.Request, res: express.Response): Promise<void | any> {
         try {
+            
             //Obtem o token do usuário por um parametro do header HTTP.
            var tokenJwt: string = String(req.header('jwt'));
             //Verifica se o token é válido.
            var decodedToken = Object(this.verifyToken(tokenJwt,res));
             var fcmToken: string = String(req.body.fcmToken);
-            if(fcmToken && decodedToken && fcmToken.trim() != '' && fcmToken != 'undefined'){
-                var query = {uid:decodedToken.usuario.trim()},
-                            update = {
-                                $addToSet: { fcmTokens: fcmToken.trim() },
-                            },
-                            options = { upsert: true, new: true, setDefaultsOnInsert: true }; 
+            var query = {
+                uid:decodedToken.usuario};
+                 var update = {
+                            uid:decodedToken.usuarioToken,
+                            $addToSet: { fcmTokens: fcmToken },
+                        };
+                        var options = { upsert: true, new: true, setDefaultsOnInsert: true }; 
+            if(fcmToken != null && decodedToken != null && fcmToken.trim() != '' && fcmToken != 'undefined'){
                 
-                var docs = await UserModel.findOneAndUpdate(query, update, options);
+                var docs = await GroupModel.findOneAndUpdate(query,update as UpdateQuery<object>,options);
                 console.log('O usuário '+decodedToken.usuario.trim()+' registrou o fcmToken: '+ fcmToken.trim());
                 return this.ok(res,docs);
             }else{
