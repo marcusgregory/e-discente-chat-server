@@ -12,8 +12,11 @@ import path from "path";
 import { MessageModel } from "./models/message.model";
 //import authMiddleware from "./middlewares/auth.middleware";
 import { UserModel } from "./models/users.model";
+import { GroupModel } from "./models/groups.model";
 const { createAdapter } = require("@socket.io/mongo-adapter");
 const bodyParser = require("body-parser");
+const admin = require("firebase-admin");
+var serviceAccount = require("./firebase/e-discente-2dbb4-firebase-adminsdk-w9dd3-2a4908a372.json");
 //import axios from 'axios';
 //import { GroupModel } from "./models/groups.model";
 
@@ -37,9 +40,12 @@ class App {
     this.socketInit();
   }
   buildHttpServer(server: express.Application): http.Server {
-    process.env.TZ = 'America/Sao_Paulo' 
+    process.env.TZ = 'America/Sao_Paulo'
     dotenv.config();
     database.connect();
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount)
+    });
     return new http.Server(server);
   }
 
@@ -54,7 +60,7 @@ class App {
     this.server.use(express.json());
     this.server.use(bodyParser.urlencoded({
       extended: true
-  }));
+    }));
     this.server.use(bodyParser.json());
     //this.server.use(authMiddleware);
   }
@@ -68,19 +74,19 @@ class App {
   }
 
   async socketInit() {
-  //  database.database.once("open", async () => {
-  //   try {
-  //     await database.database.db.createCollection('socket.io-adapter-events',{
-  //       capped: true,
-  //       size: 1e6
-  //     });
-  //   } catch (e) {
-  //     // collection already exists
-  //   }finally{
-  //     const collection = database.database.db.collection('socket.io-adapter-events');
-  //     this.io.adapter(createAdapter(collection));
-  //   }
-  //  });
+    //  database.database.once("open", async () => {
+    //   try {
+    //     await database.database.db.createCollection('socket.io-adapter-events',{
+    //       capped: true,
+    //       size: 1e6
+    //     });
+    //   } catch (e) {
+    //     // collection already exists
+    //   }finally{
+    //     const collection = database.database.db.collection('socket.io-adapter-events');
+    //     this.io.adapter(createAdapter(collection));
+    //   }
+    //  });
 
     instrument(this.io, {
       auth: false
@@ -90,7 +96,7 @@ class App {
       //pega o token do usuario passado pelo app
       var token = String(socket.handshake.query.token);
       //console.log("query :"+ socket.handshake.query);
-      var usuario:any = JSON.parse(String(socket.handshake.query.usuario));
+      var usuario: any = JSON.parse(String(socket.handshake.query.usuario));
       console.log('socket conectado: ' + socket.id);
       console.log('usuario: ' + usuario.nomeDeUsuario);
 
@@ -101,19 +107,19 @@ class App {
         //pega o nome do usuario de dentro do token
         usuarioToken = decoded.usuario;
 
-        var query = {uid:usuario.nomeDeUsuario},
-                            update = {
-                                uid:usuario.nomeDeUsuario,
-                                isOnline: true,
-                                photoUrl:usuario.urlImagemPerfil
-                                 },
-                            options = { upsert: true, new: true, setDefaultsOnInsert: true };
-                        try {
-                            var user: any = await UserModel.findOneAndUpdate(query, update, options);
-                            console.log(user);
-                        } catch (err) {
-                          socket.disconnect();
-                        }
+        var query = { uid: usuario.nomeDeUsuario },
+          update = {
+            uid: usuario.nomeDeUsuario,
+            isOnline: true,
+            photoUrl: usuario.urlImagemPerfil
+          },
+          options = { upsert: true, new: true, setDefaultsOnInsert: true };
+        try {
+          var user: any = await UserModel.findOneAndUpdate(query, update, options);
+          console.log(user);
+        } catch (err) {
+          socket.disconnect();
+        }
 
       } catch (err) {
         console.log('socket desconectado (Falha no token): ' + socket.id);
@@ -166,27 +172,46 @@ class App {
       socket.on('enviar_mensagem', async (message, callback) => {
         try {
           var dateNew = new Date();
-         // dateNew.setHours(dateNew.getHours() - 3)
+          // dateNew.setHours(dateNew.getHours() - 3)
           message['sendAt'] = new Date();
           var msg: any = await MessageModel.create(message);
           console.log(msg);
           callback({
             status: 'ok',
             message: 'Mensagem recebida no servidor',
-            server_time:dateNew,
+            server_time: dateNew,
           });
           console.log(usuario.nomeDeUsuario + ' enviou a mensagem: ' + message.messageText);
           //message['sendAt'] = dateNew;
           socket.to(message.gid).emit('receber_mensagem', message);
-      } catch (err) {
-        console.log(err);
-        callback({
-          status: 'error',
-          messageError:err.toString,
-          message: 'Não foi possível salvar a mensagem no banco de dados'
-        });
-      }
-       
+          var group: any = await GroupModel.findOne({ gid: message.gid });
+          console.log(group);
+          group.get('members').forEach(async (uid: any) => {
+            if (uid != message.sendBy) {
+              var user: any = await UserModel.findOne({ uid: uid });
+              user.get('fcmTokens').forEach(async (token: any) => {
+                await admin.messaging().send({
+                  token: token,
+                  data: {},
+                  notification: {
+                    title: group.get('name'),
+                    body: '<b>'+message.sendBy+'</b>: '+message.messageText,
+                  },
+                });
+              });
+            }
+          });
+
+
+        } catch (err) {
+          console.log(err);
+          callback({
+            status: 'error',
+            messageError: err.toString,
+            message: 'Não foi possível salvar a mensagem no banco de dados'
+          });
+        }
+
       });
 
 
