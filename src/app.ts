@@ -195,7 +195,7 @@ class App {
                   data: {},
                   notification: {
                     title: group.get('name'),
-                    body: '<b>'+message.sendBy+'</b>: '+message.messageText,
+                    body: ''+message.sendBy+': '+message.messageText,
                   },
                 });
               });
