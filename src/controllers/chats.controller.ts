@@ -44,6 +44,19 @@ class ChatsController extends BaseController {
                 var responses = await Promise.all([response1,response2]);
                 if (responses[0].status === 200 && responses[1].status == 200) {
                     var grupos: Array<Object> = [];
+                        var query = { gid: "0"},
+                            update = {
+                                gid: "0",
+                                name: "DISCENTES GERAL",
+                                $addToSet: { members: decodedToken.usuario.trim() }
+                            },
+                            options = { upsert: true, new: true, setDefaultsOnInsert: true }; 
+                        try {
+                            var salaDoc: any = await GroupModel.findOneAndUpdate(query, update, options);
+                            grupos.push(salaDoc);
+                        } catch (err) {
+                            return this.fail(res, err); 
+                        }
                     var curso = String(responses[1].data.data.curso).toLowerCase().trim().replace(" ","").replace("/", "-").replace("\\", "-");
                         var query = { gid: curso },
                             update = {
