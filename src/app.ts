@@ -191,7 +191,7 @@ class App {
               var user: any = await UserModel.findOne({ uid: uid });
               user.get('fcmTokens').forEach(async (token: any) => {
                 await admin.messaging().send({
-                  token: token,
+                  // token: token,
                   android:{
                     priority:"high"
                   },
@@ -199,6 +199,7 @@ class App {
                     groupName:group.get('name'),
                     messageTo:user.get('uid')
                   },
+                  topic:String(user.get('uid')).toLowerCase().trim(),
                   // notification: {
                   //   title: group.get('name'),
                   //   body: ''+message.sendBy+': '+message.messageText,
