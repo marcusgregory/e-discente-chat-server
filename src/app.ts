@@ -192,11 +192,12 @@ class App {
               user.get('fcmTokens').forEach(async (token: any) => {
                 await admin.messaging().send({
                   token: token,
-                  data: {},
-                  notification: {
-                    title: group.get('name'),
-                    body: ''+message.sendBy+': '+message.messageText,
-                  },
+                  data: {title: group.get('name'),
+                  body: ''+message.sendBy+': '+message.messageText,},
+                  // notification: {
+                  //   title: group.get('name'),
+                  //   body: ''+message.sendBy+': '+message.messageText,
+                  // },
                 });
               });
             }
