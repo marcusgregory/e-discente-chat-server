@@ -201,8 +201,8 @@ class App {
                   },
                   //topic:String(user.get('uid')).toLowerCase().trim(),
                    notification: {
-                     title: group.get('name'),
-                     body: ''+message.sendBy+': '+message.messageText,
+                     title: "",
+                     body: '',
                    },
                 });
               });
