@@ -30,14 +30,35 @@ class ChatsController extends BaseController {
 
             try {
 
-                var response = await axios.get(process.env.APIUNILABURL + '/sigaa/turmas', {
+                var response1 = axios.get(process.env.APIUNILABURL + '/sigaa/turmas', {
                     headers: {
                         'jwt': tokenJwt
                     }
                 });
-                if (response.status === 200) {
+                var response2 = axios.get(process.env.APIUNILABURL + '/sigaa/discente', {
+                    headers: {
+                        'jwt': tokenJwt
+                    }
+                });
+
+                var responses = await Promise.all([response1,response2]);
+                if (responses[0].status === 200 && responses[1].status == 200) {
                     var grupos: Array<Object> = [];
-                    for (var turma of response.data.data) {
+                    var curso = String(responses[1].data.data.curso).toLowerCase().trim().replace(" ","").replace("/", "-").replace("\\", "-");
+                        var query = { gid: curso },
+                            update = {
+                                gid: curso,
+                                name: String(responses[1].data.data.curso),
+                                $addToSet: { members: decodedToken.usuario.trim() }
+                            },
+                            options = { upsert: true, new: true, setDefaultsOnInsert: true }; 
+                        try {
+                            var salaDoc: any = await GroupModel.findOneAndUpdate(query, update, options);
+                            grupos.push(salaDoc);
+                        } catch (err) {
+                            return this.fail(res, err); 
+                        }
+                    for (var turma of responses[0].data.data) {
                         var idGrupo: string = String(turma.idTurma);
                         var nomeGrupo: string = String(turma.nomeTurma);
                         var query = { gid: idGrupo },
@@ -58,7 +79,7 @@ class ChatsController extends BaseController {
                     return this.ok(res, grupos);
 
                 } else {
-                    return this.fail(res, 'status=' + response.status + '\nOcorreu um erro ao obter as turmas no servidor')
+                    return this.fail(res, 'status=' + responses[0].status + '\nOcorreu um erro ao obter as turmas no servidor')
                 }
 
             } catch (err) {
