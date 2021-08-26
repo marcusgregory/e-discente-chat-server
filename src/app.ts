@@ -195,7 +195,10 @@ class App {
                   android:{
                     priority:"high"
                   },
-                  data: {message:JSON.stringify(message),groupName:group.get('name')},
+                  data: {message:JSON.stringify(message),
+                    groupName:group.get('name'),
+                    messageTo:user.get('uid')
+                  },
                   // notification: {
                   //   title: group.get('name'),
                   //   body: ''+message.sendBy+': '+message.messageText,
