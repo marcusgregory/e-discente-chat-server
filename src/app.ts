@@ -192,6 +192,9 @@ class App {
               user.get('fcmTokens').forEach(async (token: any) => {
                 await admin.messaging().send({
                   token: token,
+                  android:{
+                    priority:"high"
+                  },
                   data: {title: group.get('name'),
                   body: ''+message.sendBy+': '+message.messageText,},
                   // notification: {
