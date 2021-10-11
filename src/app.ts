@@ -192,6 +192,7 @@ class App {
               user.get('fcmTokens').forEach(async (token: any) => {
                 await admin.messaging().send({
                    token: token,
+                   collapse_key:'new_message',
                   android:{
                     priority:"high"
                   },
@@ -201,8 +202,9 @@ class App {
                   },
                   //topic:String(user.get('uid')).toLowerCase().trim(),
                    notification: {
-                     title: "",
-                     body: '',
+                     title: 'e-Discente',
+                     body: 'Você tem novas mensagens',
+                     image: "https://drive.google.com/u/6/uc?id=172rIahoLUV0J1Ya0e9OwJElDj6xk2mv5&export=download"
                    },
                 });
               });
@@ -214,7 +216,7 @@ class App {
           console.log(err);
           callback({
             status: 'error',
-            messageError: err.toString,
+            messageError: err,
             message: 'Não foi possível salvar a mensagem no banco de dados'
           });
         }
