@@ -214,9 +214,13 @@ class App {
 
         } catch (err) {
           console.log(err);
+          let errorMessage = "Failed to do something exceptional";
+          if (err instanceof Error) {
+            errorMessage = err.message;
+          }
           callback({
             status: 'error',
-            messageError: err.toString,
+            messageError: errorMessage,
             message: 'Não foi possível salvar a mensagem no banco de dados'
           });
         }
