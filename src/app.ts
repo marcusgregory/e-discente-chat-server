@@ -192,7 +192,6 @@ class App {
               user.get('fcmTokens').forEach(async (token: any) => {
                 await admin.messaging().send({
                    token: token,
-                   collapseKey:'new_message',
                   android:{
                     priority:"high"
                   },
@@ -202,6 +201,7 @@ class App {
                   },
                   //topic:String(user.get('uid')).toLowerCase().trim(),
                    notification: {
+                     collapseKey:'new_message',
                      title: 'e-Discente',
                      body: 'Você tem novas mensagens',
                      image: "https://drive.google.com/u/6/uc?id=172rIahoLUV0J1Ya0e9OwJElDj6xk2mv5&export=download"
