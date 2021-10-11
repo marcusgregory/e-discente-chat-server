@@ -28,7 +28,7 @@ class ProfilePicController extends BaseController {
                     return this.fail(res, 'Não foi possível obter a foto do perfil');
                 }
                 
-                } catch (err) {
+                } catch (err:any) {
                     console.log(err);
                     return this.fail(res, err.toString())
                 }
@@ -39,7 +39,7 @@ class ProfilePicController extends BaseController {
           
 
 
-        } catch (err) {
+        } catch (err:any) {
             return this.fail(res, err.toString())
         }
     }

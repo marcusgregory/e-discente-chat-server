@@ -36,7 +36,7 @@ class RegisterTokenController extends BaseController {
           
 
 
-        } catch (err) {
+        } catch (err:any) {
             return this.fail(res, err.toString())
         }
     }

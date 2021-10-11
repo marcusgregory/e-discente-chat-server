@@ -54,7 +54,7 @@ class ChatsController extends BaseController {
                         try {
                             var salaDoc: any = await GroupModel.findOneAndUpdate(query, update, options);
                             grupos.push(salaDoc);
-                        } catch (err) {
+                        } catch (err:any) {
                             return this.fail(res, err); 
                         }
                     var curso = String(responses[1].data.data.curso).toLowerCase().trim().replace(" ","").replace("/", "-").replace("\\", "-");
@@ -68,7 +68,7 @@ class ChatsController extends BaseController {
                         try {
                             var salaDoc: any = await GroupModel.findOneAndUpdate(query, update, options);
                             grupos.push(salaDoc);
-                        } catch (err) {
+                        } catch (err:any) {
                             return this.fail(res, err); 
                         }
                     for (var turma of responses[0].data.data) {
@@ -84,7 +84,7 @@ class ChatsController extends BaseController {
                         try {
                             var salaDoc: any = await GroupModel.findOneAndUpdate(query, update, options);
                             grupos.push(salaDoc);
-                        } catch (err) {
+                        } catch (err:any) {
                             return this.fail(res, err); 
                         }
 
@@ -95,14 +95,14 @@ class ChatsController extends BaseController {
                     return this.fail(res, 'status=' + responses[0].status + '\nOcorreu um erro ao obter as turmas no servidor')
                 }
 
-            } catch (err) {
+            } catch (err:any) {
                 return this.fail(res, err);
             }
 
 
 
 
-        } catch (err) {
+        } catch (err:any) {
             return this.fail(res, err.toString())
         }
     }
