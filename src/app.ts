@@ -201,10 +201,10 @@ class App {
                     messageTo:user.get('uid')
                   },
                   //topic:String(user.get('uid')).toLowerCase().trim(),
-                   notification: {
-                     title: 'e-Discente',
-                     body: 'Você tem novas mensagens',
-                   }
+                  //  notification: {
+                  //    title: 'e-Discente',
+                  //    body: 'Você tem novas mensagens',
+                  //  }
                 });
               });
             }
