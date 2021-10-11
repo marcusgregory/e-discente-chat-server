@@ -216,7 +216,7 @@ class App {
           console.log(err);
           callback({
             status: 'error',
-            messageError: err,
+            messageError: err.toString,
             message: 'Não foi possível salvar a mensagem no banco de dados'
           });
         }
