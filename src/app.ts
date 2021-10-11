@@ -192,7 +192,7 @@ class App {
               user.get('fcmTokens').forEach(async (token: any) => {
                 await admin.messaging().send({
                    token: token,
-                   collapse_key:'new_message',
+                   collapseKey:'new_message',
                   android:{
                     priority:"high"
                   },
