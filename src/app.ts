@@ -206,6 +206,9 @@ class App {
                      body: 'Você tem novas mensagens',
                      image: "https://drive.google.com/u/6/uc?id=172rIahoLUV0J1Ya0e9OwJElDj6xk2mv5&export=download"
                    },
+                   options: {
+                    collapseKey:'new_message'
+                   }
                 });
               });
             }
