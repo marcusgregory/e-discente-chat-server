@@ -193,7 +193,8 @@ class App {
                 await admin.messaging().send({
                    token: token,
                   android:{
-                    priority:"high"
+                    priority:"high",
+                    collapseKey:'new_message',
                   },
                   data: {message:JSON.stringify(message),
                     groupName:group.get('name'),
@@ -201,13 +202,9 @@ class App {
                   },
                   //topic:String(user.get('uid')).toLowerCase().trim(),
                    notification: {
-                     collapseKey:'new_message',
                      title: 'e-Discente',
                      body: 'Você tem novas mensagens',
                      image: "https://drive.google.com/u/6/uc?id=172rIahoLUV0J1Ya0e9OwJElDj6xk2mv5&export=download"
-                   },
-                   options: {
-                    collapseKey:'new_message'
                    }
                 });
               });
