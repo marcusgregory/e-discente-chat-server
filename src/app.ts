@@ -195,7 +195,7 @@ class App {
                   webpush:{
                    notification: {
                      title: group.get('name'),
-                     body: user.get('uid')+": "+user.get('uid'),
+                     body: user.get('uid')+": "+JSON.stringify(message),
                     }
                   },
                   android:{
