@@ -194,8 +194,8 @@ class App {
                    token: token,
                   webpush:{
                    notification: {
-                     title: 'e-Discente',
-                     body: 'Você tem novas mensagens',
+                     title: group.get('name'),
+                     body: user.get('uid')+": "+user.get('uid'),
                     }
                   },
                   android:{
