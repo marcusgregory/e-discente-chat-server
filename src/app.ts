@@ -192,6 +192,12 @@ class App {
               user.get('fcmTokens').forEach(async (token: any) => {
                 await admin.messaging().send({
                    token: token,
+                  webpush:{
+                   notification: {
+                     title: 'e-Discente',
+                     body: 'Você tem novas mensagens',
+                    }
+                  },
                   android:{
                     priority:"high",
                     collapseKey:'new_message',
@@ -200,6 +206,7 @@ class App {
                     groupName:group.get('name'),
                     messageTo:user.get('uid')
                   },
+                  
                   //topic:String(user.get('uid')).toLowerCase().trim(),
                   //  notification: {
                   //    title: 'e-Discente',
