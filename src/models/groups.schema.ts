@@ -29,11 +29,11 @@ const GroupSchema = new Schema(
                 type:String,
                 default:''
             },
-            sentBy: {
+            sendBy: {
                 type:String,
                 default:''
             },
-            sentAt: {
+            sendAt: {
                 type: Date,
                 default: new Date()
             },
