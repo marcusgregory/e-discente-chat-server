@@ -17,6 +17,14 @@ const GroupSchema = new Schema(
         },
         name: String,
         recentMessage: {
+            mid: {
+                type:String,
+                default:''
+            },
+            gid: {
+                type:String,
+                default:''
+            },
             messageText: {
                 type:String,
                 default:''

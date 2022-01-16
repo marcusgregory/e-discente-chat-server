@@ -175,7 +175,11 @@ class App {
           // dateNew.setHours(dateNew.getHours() - 3)
           message['sendAt'] = new Date();
           var msg: any = await MessageModel.create(message);
+          var group = await GroupModel.findOneAndUpdate({ gid: message.gid },{recentMessage:message},{
+            new: true
+          });
           console.log(msg);
+          console.log(group);
           callback({
             status: 'ok',
             message: 'Mensagem recebida no servidor',
