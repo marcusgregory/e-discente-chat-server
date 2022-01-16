@@ -37,6 +37,10 @@ const GroupSchema = new Schema(
                 type: Date,
                 default: new Date()
             },
+            profilePicUrl: {
+                type:String,
+                default:''
+            },
             readBy: [{
                 type: String,
                 default:''
