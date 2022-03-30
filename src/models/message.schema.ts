@@ -1,6 +1,6 @@
 import { Schema } from "mongoose";
 
-const MessageSchema = new Schema<MessageText>(
+const MessageSchema = new Schema(
     {
         mid: {
             type:String,
@@ -24,4 +24,3 @@ const MessageSchema = new Schema<MessageText>(
     }
 );
 export default MessageSchema;
-

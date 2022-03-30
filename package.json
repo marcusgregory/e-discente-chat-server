@@ -15,7 +15,7 @@
     "start:prod": "node dist/server.js",
     "start": "node dist/server.js",
     "deploy": "git add . && git commit -m Heroku && git push heroku master",
-    "test": "node dist/server.js"
+    "test": "node dist/test.js"
   },
   "license": "ISC",
   "dependencies": {
