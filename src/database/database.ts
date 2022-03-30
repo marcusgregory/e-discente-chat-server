@@ -8,7 +8,12 @@ class Database {
 
   }
   connect() {
-    const uri = "mongodb+srv://admin:bancoteste@cluster0.c4ckv.mongodb.net/chat?retryWrites=true&w=majority";
+    const DB_USER:string = String(process.env.DB_USER);
+    const DB_PASSWORD:string = String(process.env.DB_PASSWORD);
+    const DB_HOST:string = String(process.env.DB_HOST);
+    const DB_NAME:string = String(process.env.DB_NAME);
+    const DB_PORT:string = String(process.env.DB_PORT);
+    const uri = "mongodb+srv://"+DB_USER+":"+DB_PASSWORD+"@mongodb:"+DB_PORT+"/"+DB_NAME+"?retryWrites=true&w=majority";
     if (this.database) {
       return;
     }

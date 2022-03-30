@@ -199,7 +199,7 @@ class App {
                   webpush:{
                    notification: {
                      title: group.get('name'),
-                     body: user.get('uid')+": "+message.messageText,
+                     body: message.sendBy+": "+message.messageText,
                     }
                   },
                   android:{
