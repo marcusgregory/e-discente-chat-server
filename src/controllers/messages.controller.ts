@@ -37,9 +37,6 @@ class MessagesController extends BaseController {
                 //     doc.set('sendAt',data);
                 //     return doc;
                 // });
-                if(Object.keys(docs).length == 0){
-                    return this.notFound(res,'Sem mais mensagens');
-                }
                 return this.ok(res,docs);
             }else{
                 this.fail(res,'Grupo inválido')
