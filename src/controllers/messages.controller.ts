@@ -20,7 +20,7 @@ class MessagesController extends BaseController {
             //this.verifyToken(tokenJwt,res);
             var gid: string = String(req.params.gid);
 
-            var perPage: number = Number(req.query.perPage ?? 10);
+            var perPage: number = Number(req.query.perPage ?? 17);
             var page: number = Number(req.query.page ?? 1);
             if(page <=1){
                 page = 0;
