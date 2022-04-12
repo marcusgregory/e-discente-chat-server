@@ -30,6 +30,7 @@ class MessagesController extends BaseController {
 
             if(gid){
                 var docs = await MessageModel.find({gid:gid}).sort({_id:1}).limit(perPage).skip(page*perPage);
+                console.log('Limit: '+perPage+' Skip: '+page*perPage+' Page: '+page);
                 // docs.map((doc:any) => {
                 //     var data:Date = doc.get('sendAt');
                 //     data.setHours(data.getHours() -3);
