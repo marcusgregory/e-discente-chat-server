@@ -22,7 +22,7 @@ class MessagesController extends BaseController {
 
             var perPage: number = Number(req.query.perPage ?? 10);
             var page: number = Number(req.query.page ?? 1);
-            if(page <=0){
+            if(page <=1){
                 page = 0;
             }else{
                 page = page--;
