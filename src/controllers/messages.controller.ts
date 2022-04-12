@@ -19,8 +19,17 @@ class MessagesController extends BaseController {
             //Verifica se o token é válido.
             //this.verifyToken(tokenJwt,res);
             var gid: string = String(req.params.gid);
+
+            var perPage: number = Number(req.query.perPage ?? 10);
+            var page: number = Number(req.query.page ?? 1);
+            if(page <=0){
+                page = 0;
+            }else{
+                page = page--;
+            }
+
             if(gid){
-                var docs = await MessageModel.find({gid:gid}).sort({_id:1});
+                var docs = await MessageModel.find({gid:gid}).sort({_id:1}).limit(perPage).skip(page*perPage);
                 // docs.map((doc:any) => {
                 //     var data:Date = doc.get('sendAt');
                 //     data.setHours(data.getHours() -3);
