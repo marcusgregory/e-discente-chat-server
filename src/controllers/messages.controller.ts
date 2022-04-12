@@ -25,7 +25,7 @@ class MessagesController extends BaseController {
             if(page <=1){
                 page = 0;
             }else{
-                page = page--;
+                page = page-1;
             }
 
             if(gid){
