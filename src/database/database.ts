@@ -8,7 +8,8 @@ class Database {
 
   }
   connect() {
-    const uri = "mongodb+srv://admin:bancoteste@cluster0.c4ckv.mongodb.net/chat?retryWrites=true&w=majority";
+ console.log(process.env.DB_HOST);
+    const uri = String(process.env.DB_HOST);
     if (this.database) {
       return;
     }

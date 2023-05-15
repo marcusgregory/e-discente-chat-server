@@ -51,7 +51,8 @@ class App {
 
   buildSocketIO(): socketIO.Server {
     return new socketIO.Server(this.httpServer, {
-      cors: this.corsOpts
+      cors: this.corsOpts,
+      path:"/socket"
     });
 
   }
